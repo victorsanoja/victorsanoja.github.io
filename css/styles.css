@@ -14,7 +14,6 @@
 }
 * { box-sizing: border-box; }
 html { scrollbar-gutter: stable; }
-html.iman { scroll-snap-type: y mandatory; }
 @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
 html, body { margin: 0; background: var(--bg); color: var(--white); font-family: var(--mono); }
 body { overflow-x: hidden; }
@@ -51,7 +50,7 @@ body { overflow-x: hidden; }
 .primera #hoja-1 .grid { --r: -160px; }
 
 /* ── Hoja ── */
-.sheet { position: relative; z-index: 1; isolation: isolate; display: flow-root; scroll-snap-align: start; }
+.sheet { position: relative; z-index: 1; isolation: isolate; display: flow-root; }
 .frame { position: absolute; left: var(--X); top: var(--Y); width: calc(var(--W) + 1px); height: calc(var(--H) + 1px); z-index: -1; pointer-events: none; }
 @property --r { syntax: '<length>'; inherits: false; initial-value: 150vmax; }
 .grid { position: absolute; inset: 0;
@@ -73,7 +72,8 @@ body { overflow-x: hidden; }
 .cabecera { display: flex; flex-direction: column; gap: var(--u); }
 
 /* Modo plano (escritorio, 54 columnas o más): cada pieza se coloca por celdas desde reticula.js */
-.plano .content { position: absolute; left: var(--X); top: var(--Y); width: var(--W); height: var(--H); margin: 0; padding: 0;
+/* contain: el tamaño ya está fijado, así que un cambio dentro de una hoja (los textos de la carga) no recoloca las demás */
+.plano .content { position: absolute; left: var(--X); top: var(--Y); width: var(--W); height: var(--H); margin: 0; padding: 0; contain: size layout;
   display: grid; grid-template-columns: repeat(var(--N), var(--u)); grid-template-rows: repeat(var(--R), var(--u)); gap: 0; }
 .plano .cabecera { display: contents; }
 .plano .boxed { justify-self: start; align-self: start; width: calc(100% + 1px); height: calc(100% + 1px); margin-bottom: 0; }
@@ -157,8 +157,10 @@ nav a:hover, nav a[aria-current] { text-decoration: underline; text-underline-of
 .node.hot rect, .node.hot .pin { stroke: var(--white); stroke-width: 1.8; }
 .focus .signal.hot { opacity: 1; animation: travel 1.3s linear infinite; }
 @keyframes travel { from { offset-distance: 0%; } to { offset-distance: 100%; } }
+/* se mueven con transform y no con offset-path: así la animación la hace la tarjeta gráfica y no recalcula la página en cada fotograma */
 .packet { fill: var(--white); opacity: 0; animation: hop 3.2s linear var(--pd) infinite; }
-@keyframes hop { 0% { offset-distance: 0%; opacity: 1; } 12% { offset-distance: 100%; opacity: 1; } 12.1%, 100% { offset-distance: 100%; opacity: 0; } }
+.parado .packet { animation-play-state: paused; }
+@keyframes hop { 0% { transform: none; opacity: 1; } 12% { transform: translateX(var(--l)); opacity: 1; } 12.1%, 100% { transform: translateX(var(--l)); opacity: 0; } }
 .hint { font-family: var(--hand); font-size: 19px; fill: var(--white); }
 .schema.v .hint { font-size: 15px; }
 .hint-arrow { fill: none; stroke: var(--white); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
@@ -251,14 +253,16 @@ nav a:hover, nav a[aria-current] { text-decoration: underline; text-underline-of
 .plano .foto .label { top: calc(var(--u) * 18); }
 
 /* ── Pie ── */
-.coords { font-size: 9.5px; }
+/* cambia con cada movimiento del ratón: con contain, ese cambio no obliga a recolocar el resto de la página */
+.coords { font-size: 9.5px; height: var(--u); contain: strict; }
 .titleblock { font-size: 9.5px; width: calc(min(100%, var(--u) * 14) + 1px); height: calc(var(--u) * 4 + 1px); margin: 0 -1px -1px 0; align-self: flex-end; }
 .titleblock .row { display: flex; justify-content: space-between; gap: 12px; height: var(--u); padding: 0 12px; white-space: nowrap; }
 .titleblock .row b { font-weight: 600; }
 .sign { font-family: var(--hand); font-size: 15px; letter-spacing: .02em; }
 
 /* ── Pantalla de carga ── */
-#loader { display: none; position: fixed; inset: 0; z-index: 10; background: var(--bg); transition: background .9s ease; }
+/* contain: los números cambian en cada fotograma y así solo se recoloca la pantalla de carga */
+#loader { display: none; position: fixed; inset: 0; z-index: 10; background: var(--bg); transition: background .9s ease; contain: strict; }
 .primera #loader { display: block; }
 #loader svg { position: absolute; inset: 0; width: 100%; height: 100%; }
 #loader .xh { stroke: var(--line); stroke-width: 1; stroke-dasharray: 1; stroke-dashoffset: 1; }
@@ -273,7 +277,8 @@ nav a:hover, nav a[aria-current] { text-decoration: underline; text-underline-of
 .ld-br .pct { display: block; font-size: 54px; letter-spacing: -1px; line-height: 1; }
 .ld-xy { left: calc(50% + 46px); top: calc(50% + 30px); letter-spacing: .08em; }
 .ld-bar { position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: rgba(255, 255, 255, .2); }
-.ld-bar i { display: block; height: 100%; width: 0; background: var(--white); }
+/* la barra crece con transform y no con width: así no hay que recolocar nada en cada fotograma */
+.ld-bar i { display: block; height: 100%; background: var(--white); transform: scaleX(0); transform-origin: left; }
 #loader > * { transition: opacity .35s ease; }
 #loader.out { display: block; background: transparent; pointer-events: none; }
 #loader.out > * { opacity: 0; }
@@ -281,11 +286,9 @@ nav a:hover, nav a[aria-current] { text-decoration: underline; text-underline-of
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }
   #loader { display: none !important; }
-  html.iman { scroll-snap-type: none; }
   .marker, .coords, #light { display: none; }
 }
 @media (pointer: coarse) {
   .marker, .coords, #light { display: none; }
-  html.iman { scroll-snap-type: none; }
 }
 @media (max-width: 599px) { .ruler, .marker { display: none; } }

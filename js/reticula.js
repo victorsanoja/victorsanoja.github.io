@@ -146,6 +146,7 @@ export function prepararHojas() {
       coords: k('coords'),
       plano: PLANOS[root.id],
       F: { x: 0, y: 0, w: 0, h: 0 },
+      reglas: '',
     };
   });
 }
@@ -175,9 +176,12 @@ export function maquetar(hojas) {
   const enPlano = N >= COMPOSICION;
   html.classList.toggle('plano', enPlano);
   html.style.setProperty('--m', m + 'px');
-  for (const h of hojas) {
-    if (enPlano) maquetarPlano(h, sw, vh, m, N);
-    else maquetarPila(h, sw, vh, m, N);
+  if (enPlano) for (const h of hojas) maquetarPlano(h, sw, vh, m, N);
+  else {
+    // primero se escribe en todas las hojas y luego se mide: medir entre escrituras obligaría a recalcular la página en cada hoja
+    for (const h of hojas) prepararPila(h, sw, m, N);
+    const alturas = hojas.map((h) => h.content.offsetHeight);
+    hojas.forEach((h, i) => cerrarPila(h, alturas[i], vh, m, N));
   }
   // las posiciones en la página se calculan aquí, nunca dentro de mousemove
   for (const h of hojas) {
@@ -207,13 +211,16 @@ function maquetarPlano(h, sw, vh, m, N) {
   dibujarReglas(h, N, R, m);
 }
 
-function maquetarPila(h, sw, vh, m, N) {
+function prepararPila(h, sw, m, N) {
   const C = Math.min(N - 2, 27), cl = Math.floor((N - C) / 2);
   const W = N * U, X = Math.floor((sw - W) / 2);
   h.root.style.height = '';
   fijar(h.root, { '--X': X + 'px', '--Y': m + 'px', '--W': W + 'px', '--N': N, '--C': C, '--cl': cl });
   h.content.style.minHeight = '';
-  const R = Math.ceil(h.content.offsetHeight / U);
+}
+
+function cerrarPila(h, alto, vh, m, N) {
+  const R = Math.ceil(alto / U), W = N * U;
   h.content.style.minHeight = R * U + 'px';
   fijar(h.root, { '--H': R * U + 'px', '--R': R });
   h.frame.style.setProperty('--cy', Math.min(R * U / 2, vh / 2 - m) + 'px');
@@ -221,7 +228,12 @@ function maquetarPila(h, sw, vh, m, N) {
   dibujarReglas(h, N, R, m);
 }
 
-function dibujarReglas({ reglaX, reglaY }, N, R, m) {
+function dibujarReglas(h, N, R, m) {
+  // al redimensionar, casi siempre las reglas siguen midiendo lo mismo: rehacerlas son cientos de elementos
+  const medida = `${N} ${R} ${m}`;
+  if (h.reglas === medida) return;
+  h.reglas = medida;
+  const { reglaX, reglaY } = h;
   const el = (tag, attrs, padre) => {
     const n = document.createElementNS(NS, tag);
     for (const k in attrs) n.setAttribute(k, attrs[k]);

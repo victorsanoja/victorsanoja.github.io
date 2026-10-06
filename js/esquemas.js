@@ -18,3 +18,9 @@ export function iniciarEsquemas() {
     n.addEventListener('mouseleave', apagar, { passive: true });
   });
 }
+
+// Los paquetes del flujo se mueven sin parar: fuera de la pantalla se paran, para no gastar procesador en algo que no se ve.
+export function pausarFueraDeVista() {
+  const vigia = new IntersectionObserver((vistas) => vistas.forEach((v) => v.target.classList.toggle('parado', !v.isIntersecting)));
+  new Set([...document.querySelectorAll('.packet')].map((p) => p.ownerSVGElement)).forEach((s) => vigia.observe(s));
+}

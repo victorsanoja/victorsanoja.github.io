@@ -35,7 +35,7 @@ export function iniciarCarga(portada) {
     if (terminado) return;
     terminado = true;
     pct.textContent = '100';
-    barra.style.width = '100%';
+    barra.style.transform = 'none';
     loader.classList.add('out');
     html.classList.remove('primera');
     try { localStorage.setItem('cv-visto', '1'); } catch (e) { /* sin almacenamiento: la carga volverá a salir */ }
@@ -57,7 +57,7 @@ export function iniciarCarga(portada) {
       if (terminado) return;
       const p = Math.min(1, (ahora - t0) / DURACION), e = 1 - Math.pow(1 - p, 3);
       pct.textContent = String(Math.round(e * 100)).padStart(3, '0');
-      barra.style.width = (e * 100) + '%';
+      barra.style.transform = `scaleX(${e})`;
       const temblor = (1 - e) * 40;
       xy.textContent = `X ${(innerWidth / 2 + (Math.random() - .5) * temblor).toFixed(1).padStart(6, '0')} · Y ${(innerHeight / 2 + (Math.random() - .5) * temblor).toFixed(1).padStart(6, '0')}`;
       if (p < 1) requestAnimationFrame(tic); else setTimeout(terminar, 180);
