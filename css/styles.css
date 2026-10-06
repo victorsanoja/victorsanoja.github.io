@@ -241,8 +241,7 @@ nav a:hover, nav a[aria-current] { text-decoration: underline; text-underline-of
 .plano .foto { height: auto; }
 .photo { position: absolute; left: 0; top: 0; width: calc(var(--u) * 8 + 1px); height: calc(var(--u) * 10 + 1px); margin: 0; overflow: hidden; }
 .plano .photo { width: calc(var(--u) * 12 + 1px); height: calc(var(--u) * 15 + 1px); }
-.photo .hatch { position: absolute; inset: 0; background: repeating-linear-gradient(-45deg, rgba(255, 255, 255, .07) 0 1px, transparent 1px 12px); }
-.photo-note { position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%); text-align: center; font-family: var(--hand); font-size: 19px; }
+.photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .dims { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
 .dims.h { display: none; }
 .plano .dims.h { display: block; }
