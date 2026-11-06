@@ -9,6 +9,7 @@ import { iniciarContacto } from './contacto.js';
 const hojas = prepararHojas();
 dibujarBordes();
 maquetar(hojas);
+document.documentElement.classList.remove('maquetando');
 // lo primero tras maquetar: si otro módulo fallara, la carga no se quedaría tapando el CV
 iniciarCarga(hojas[0]);
 actualizarIman();

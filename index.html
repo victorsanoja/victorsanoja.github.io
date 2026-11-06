@@ -11,12 +11,15 @@
 <link rel="stylesheet" href="css/styles.css">
 <script>
   // Va aquí y no en main.js: la portada debe ocultarse antes del primer pintado, o se vería un instante antes de la carga.
-  // Si algún módulo fallara, a los 10 s se quita igualmente, para que el CV nunca se quede tapado.
+  // Si algún módulo fallara, se quitan igualmente (a los 3 y a los 10 s), para que el CV nunca se quede tapado.
   (() => {
+    const html = document.documentElement;
+    // hasta que main.js coloca las piezas, el CV se vería en una columna (la versión sin JavaScript): se oculta ese momento
+    html.classList.add('maquetando');
+    setTimeout(() => html.classList.remove('maquetando'), 3000);
     let visto = false;
     try { visto = localStorage.getItem('cv-visto') === '1'; } catch (e) {}
     if (visto || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const html = document.documentElement;
     html.classList.add('primera');
     setTimeout(() => html.classList.remove('primera'), 10000);
   })();

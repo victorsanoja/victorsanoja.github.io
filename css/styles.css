@@ -49,6 +49,9 @@ body { overflow-x: hidden; }
 .primera #hoja-1 .big text { stroke-dashoffset: 600; fill-opacity: 0; }
 .primera #hoja-1 .grid { --r: -160px; }
 
+/* visibility y no display: así reticula.js puede medir las piezas mientras siguen ocultas */
+.maquetando main { visibility: hidden; }
+
 /* ── Hoja ── */
 .sheet { position: relative; z-index: 1; isolation: isolate; display: flow-root; }
 .frame { position: absolute; left: var(--X); top: var(--Y); width: calc(var(--W) + 1px); height: calc(var(--H) + 1px); z-index: -1; pointer-events: none; }
