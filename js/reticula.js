@@ -25,7 +25,7 @@ const PLANOS = {
     },
   },
   'hoja-2': {
-    filas: 81,
+    filas: 84,
     colocar(k, { cl, cr }) {
       const L = cl, RC = cr - 27, fl = L + Math.max(0, Math.floor((cr - cl - 52) / 2));
       colocar(k('label'), L, 23, 3, 1);
@@ -47,10 +47,12 @@ const PLANOS = {
       colocar(k('cap2Label'), L, 27, 56, 1);
       colocar(k('shot2'), L, 27, 58, 15);
       colocar(k('cap2'), L + 31, cr - L - 31, 58, 4);
+      colocar(k('masLabel'), L + 31, cr - L - 31, 63, 1);
+      colocar(k('mas'), L + 31, cr - L - 31, 65, 11);
     },
   },
   'hoja-3': {
-    filas: 80,
+    filas: 99,
     colocar(k, { cl, cr }) {
       const L = cl, RC = cr - 27;
       colocar(k('label'), L, 23, 3, 1);
@@ -58,24 +60,29 @@ const PLANOS = {
       colocar(k('cota'), L, 23, 8, 1);
       colocar(k('pcLabel'), L, 23, 11, 1);
       colocar(k('pcH'), L, 23, 13, 1);
-      colocar(k('pcText'), L, 23, 15, 4);
-      colocar(k('pcFicha'), L, 23, 20, 4);
+      colocar(k('pcText'), L, 23, 15, 5);
+      colocar(k('pcFicha'), L, 23, 21, 4);
       colocar(k('pcCapLabel'), RC, 27, 11, 1);
       colocar(k('pcShot'), RC, 27, 13, 15);
       colocar(k('pcCap'), RC, 27, 29, 3);
       colocar(k('ymLabel'), L, 23, 33, 1);
       colocar(k('ymH'), L, 23, 35, 1);
-      colocar(k('ymText'), L, 23, 37, 3);
-      colocar(k('ymFicha'), L, 23, 41, 2);
+      colocar(k('ymText'), L, 23, 37, 4);
+      colocar(k('ymFicha'), L, 23, 42, 2);
       colocar(k('tasks'), RC, 27, 33, 17);
-      colocar(k('dvLabel'), L, 23, 52, 1);
-      colocar(k('dvShot'), L, 23, 54, 13);
-      colocar(k('dvText'), L, 23, 68, 3);
-      colocar(k('dvLink'), L, 23, 71, 1);
-      colocar(k('vtLabel'), RC, 27, 52, 1);
-      colocar(k('vtShot'), RC, 27, 54, 15);
-      colocar(k('vtText'), RC, 27, 70, 2);
-      colocar(k('vtLink'), RC, 27, 72, 1);
+      colocar(k('ofLabel'), L, 23, 52, 1);
+      colocar(k('ofH'), L, 23, 54, 1);
+      colocar(k('ofText'), L, 23, 56, 4);
+      colocar(k('ofFicha'), L, 23, 61, 4);
+      colocar(k('ofTasks'), RC, 27, 52, 17);
+      colocar(k('dvLabel'), L, 23, 71, 1);
+      colocar(k('dvShot'), L, 23, 73, 13);
+      colocar(k('dvText'), L, 23, 87, 4);
+      colocar(k('dvLink'), L, 23, 92, 1);
+      colocar(k('vtLabel'), RC, 27, 71, 1);
+      colocar(k('vtShot'), RC, 27, 73, 15);
+      colocar(k('vtText'), RC, 27, 89, 2);
+      colocar(k('vtLink'), RC, 27, 92, 1);
     },
   },
   'hoja-4': {
