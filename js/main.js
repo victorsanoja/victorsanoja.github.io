@@ -2,7 +2,7 @@ import { prepararHojas, dibujarBordes, maquetar } from './reticula.js';
 import { iniciarLuz } from './luz.js';
 import { iniciarCarga } from './carga.js';
 import { iniciarEsquemas, pausarFueraDeVista } from './esquemas.js';
-import { actualizarIman, iniciarScroll } from './hojas.js';
+import { iniciarScroll } from './hojas.js';
 import { iniciarCapturas } from './capturas.js';
 import { iniciarContacto } from './contacto.js';
 
@@ -12,7 +12,6 @@ maquetar(hojas);
 document.documentElement.classList.remove('maquetando');
 // lo primero tras maquetar: si otro módulo fallara, la carga no se quedaría tapando el CV
 iniciarCarga(hojas[0]);
-actualizarIman();
 const luz = iniciarLuz(hojas);
 
 const html = document.documentElement;
@@ -23,7 +22,6 @@ const rehacer = (siempre) => {
   if (siempre || html.clientWidth !== ancho || html.classList.contains('plano')) {
     ancho = html.clientWidth;
     maquetar(hojas);
-    actualizarIman();
   }
   luz.redibujar();
 };
@@ -37,6 +35,6 @@ document.fonts.ready.then(() => rehacer(true));
 
 iniciarEsquemas();
 pausarFueraDeVista();
-iniciarScroll(hojas);
+iniciarScroll();
 iniciarCapturas();
 iniciarContacto();
